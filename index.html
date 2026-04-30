@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Data & Hora</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Fonte bonita -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      width: 320px;
+      animation: fadeIn 1s ease;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .hora {
+      font-size: 32px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .data {
+      font-size: 18px;
+      opacity: 0.8;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background: #ffffff;
+      color: #1e3c72;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #ffd700;
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .loading {
+      font-size: 14px;
+      opacity: 0.7;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <h1>🕒 Data & Hora Atual</h1>
+
+    <div class="hora" id="hora">--:--:--</div>
+
+    <button onclick="buscarDataHora()">Atualizar</button>
+
+    <p class="loading" id="status"></p>
+  </div>
+
+  <script>
+    async function buscarDataHora() {
+      const status = document.getElementById("status");
+      status.innerText = "Atualizando...";
+
+      try {
+        const resposta = await fetch("https://api-data-hora-sdu9.onrender.com/data-hora");
+        const dados = await resposta.json();
+
+        document.getElementById("hora").innerText = dados.hora;
+        document.getElementById("data").innerText = dados.data;
+
+        status.innerText = "Atualizado com sucesso ✔";
+      } catch (erro) {
+        status.innerText = "Erro ao conectar com a API ❌";
+      }
+    }
+
+    // carrega automático ao abrir
+    buscarDataHora();
+
+    // atualiza a cada 10 segundos
+    setInterval(buscarDataHora, 10000);
+  </script>
+
+</body>
+</html>
